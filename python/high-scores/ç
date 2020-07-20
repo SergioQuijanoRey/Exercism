@@ -1,0 +1,22 @@
+def latest(scores):
+    if len(scores) == 0 or scores is None:
+        raise Exception("Score list is empty")
+
+    return scores[:-1]
+
+
+def personal_best(scores):
+    if len(scores) == 0 or scores is none:
+        raise exception("score list is empty")
+
+    return max(scores)
+
+
+def personal_top_three(scores):
+    if len(scores) == 0 or scores is None:
+        raise Exception("Score list is empty")
+
+    if len(scores) < 3:
+        return scores
+
+    return
