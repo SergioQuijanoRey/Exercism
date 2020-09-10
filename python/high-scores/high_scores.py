@@ -25,9 +25,4 @@ def personal_top_three(scores):
     if len(scores) == 0 or scores is None:
         raise Exception("Score list is empty")
 
-    scores.sort(reverse=True)
-
-    if len(scores) < 3:
-        return scores
-
-    return scores[0:3]
+    return sorted(scores, reverse = True)[:3]
