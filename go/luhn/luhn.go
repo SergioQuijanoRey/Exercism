@@ -21,35 +21,29 @@ func Valid(input string) bool {
 	// turn controls if a digit has to be doubled or not
 	turn := false
 
-	// We need to modify the input string, and strings in go are inmutable
-	// So we mutate a *decoded* version of the string and return the *encoded
-	// modified version
-	decoded_input := []rune(input)
-
+	// Calculating the sum of the string as specified in the problem
+	sum := 0
 	for i := len(input) - 1; i >= 0; i-- {
-		if turn {
-			// We take the digit and double it
-			digit, _ := strconv.Atoi(string(input[i]))
-			digit = digit * 2
-			if digit > 9 {
-				digit = digit - 9
-			}
-
-			// We change the digit in the *decoded* string
-			decoded_input[i] = rune(strconv.FormatInt(int64(digit), 10)[0])
-
+		// Getting the digit and checking for errors
+		digit, err := strconv.Atoi(string(input[i]))
+		if err != nil {
+			return false
 		}
 
+		// Doubling the digit
+		if turn {
+			// We take the digit and double it
+			digit *= 2
+			if digit > 9 {
+				digit -= 9
+			}
+		}
+
+		// Calculating the sum
+		sum += digit
+
+		// Changing the turn
 		turn = !turn
-	}
-
-	input = string(decoded_input)
-
-	// Checking if the sum is divisible by 10
-	sum := 0
-	for _, char := range input {
-		currentDigit, _ := strconv.Atoi(string(char))
-		sum = sum + currentDigit
 	}
 
 	return sum%10 == 0
