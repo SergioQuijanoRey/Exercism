@@ -19,13 +19,13 @@ func Valid(input string) bool {
 
 	// Doubling second digits starting from the right
 	// turn controls if a digit has to be doubled or not
-	turn := false
+	turn := len(input)%2 == 0
 
 	// Calculating the sum of the string as specified in the problem
 	sum := 0
-	for i := len(input) - 1; i >= 0; i-- {
+	for _, char := range input {
 		// Getting the digit and checking for errors
-		digit, err := strconv.Atoi(string(input[i]))
+		digit, err := strconv.Atoi(string(char))
 		if err != nil {
 			return false
 		}
