@@ -2,59 +2,36 @@ use std::fmt;
 
 #[derive(Debug, PartialEq)]
 pub struct Clock {
-    hour: i32,
     minutes: i32,
 }
 
 impl Clock {
     pub fn new(hours: i32, minutes: i32) -> Self {
-        let (converted_hours, converted_minutes) = Clock::convert_times(hours, minutes);
+        let hours = hours.rem_euclid(24);
+        let minutes = minutes + 60 * hours;
+        Clock { minutes }
+    }
 
-        Clock {
-            hour: converted_hours,
-            minutes: converted_minutes,
-        }
+    pub fn new_minutes_only(minutes: i32) -> Self{
+        Clock{ minutes }
     }
 
     pub fn add_minutes(&self, minutes: i32) -> Self {
-        let (new_hours, new_minutes) = Clock::convert_times(self.hour, self.minutes + minutes);
-
-        return Clock {
-            hour: new_hours,
-            minutes: new_minutes,
-        };
+        let total_minutes = self.minutes + minutes;
+        return Clock { minutes: total_minutes };
     }
 
-    /// Given a time in the format hours:minutes, returns the same time but
-    /// within the usual limits
-    fn convert_times(hours: i32, minutes: i32) -> (i32, i32) {
-        let mut converted_hours = hours;
-        let mut converted_minutes = minutes;
+    fn get_hours_and_minutes(&self) -> (i32, i32) {
+        let minutes = self.minutes.rem_euclid(60);
+        let hours = self.minutes.div_euclid(60).rem_euclid(24);
 
-        // Checking for negative values
-        if converted_hours < 0 {
-            return Clock::convert_times(24 - ((-hours) % 24), converted_minutes);
-        }
-        if converted_minutes < 0 {
-            return Clock::convert_times(hours - 1, 60 - ((-minutes) % 60));
-        }
-
-        // Cheking for values too big
-        if minutes >= 60 {
-            converted_hours = converted_hours + (converted_minutes / 60);
-            converted_minutes = converted_minutes % 60;
-        }
-
-        if converted_hours >= 24 {
-            converted_hours = converted_hours % 24
-        }
-
-        return (converted_hours, converted_minutes);
+        return (hours, minutes);
     }
 }
 
 impl fmt::Display for Clock {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:02}:{:02}", self.hour, self.minutes)
+        let (hours, minutes) = self.get_hours_and_minutes();
+        write!(f, "{:02}:{:02}", hours, minutes)
     }
 }
