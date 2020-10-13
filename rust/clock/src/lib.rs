@@ -9,16 +9,19 @@ impl Clock {
     pub fn new(hours: i32, minutes: i32) -> Self {
         let hours = hours.rem_euclid(24);
         let minutes = minutes + 60 * hours;
-        Clock { minutes }
+        Clock { minutes }.normalize()
     }
 
-    pub fn new_minutes_only(minutes: i32) -> Self{
-        Clock{ minutes }
+    pub fn new_minutes_only(minutes: i32) -> Self {
+        Clock { minutes }
     }
 
     pub fn add_minutes(&self, minutes: i32) -> Self {
         let total_minutes = self.minutes + minutes;
-        return Clock { minutes: total_minutes };
+        return Clock {
+            minutes: total_minutes,
+        }
+        .normalize();
     }
 
     fn get_hours_and_minutes(&self) -> (i32, i32) {
@@ -26,6 +29,13 @@ impl Clock {
         let hours = self.minutes.div_euclid(60).rem_euclid(24);
 
         return (hours, minutes);
+    }
+
+    /// If we store more than 24 hours in minutes, we normalize the amount of minutes
+    fn normalize(&self) -> Self {
+        return Clock {
+            minutes: self.minutes.rem_euclid(24 * 60),
+        };
     }
 }
 
